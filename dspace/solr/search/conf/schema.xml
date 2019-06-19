@@ -586,6 +586,8 @@
     <dynamicField name="*.year" type="sint" indexed="true" stored="true" multiValued="true" omitNorms="true" />
     <dynamicField name="*_dt" type="date" indexed="true" stored="true" multiValued="false" omitNorms="true"  docValues="true"/>
 
+    <field name="orcid_id" type="string" multiValued="true" indexed="true" stored="true" required="false"/>
+     <copyField source="orcid_id" dest="orcidid_keyword"/>
 
     <!--Used for matching on all other fields -->
      <dynamicField name="*" type="text" multiValued="true"/>
