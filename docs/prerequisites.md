@@ -21,7 +21,9 @@ For every release of DSpace, generally two release packages are available. One p
 
 To be able to install the patch, you will need the following prerequisites:
 
-* A running DSpace 5.x or 6.x instance.
+* The following DSpace versions are viable for the patch installation (Please note that this patch is depending on the fact that the following DSpace versions contain the [ORCID API 2.0 functionality integration](https://jira.duraspace.org/browse/DS-3447). Prior DSpace versions are not eligible for the patch application without additional porting of the ORCIDv2 code)
+  * 5.9+
+  * 6.3+
 * Maven 3.2.2 or greater.
 * Git should be installed on the machine. The patch will be applied using several git commands as indicated in the next section.
 
