@@ -24,6 +24,7 @@
 
     <bean id="solrServiceResourceIndexPlugin" class="org.dspace.discovery.SolrServiceResourceRestrictionPlugin" scope="prototype"/>
     <bean id="SolrServiceSpellIndexingPlugin" class="org.dspace.discovery.SolrServiceSpellIndexingPlugin" scope="prototype"/>
+    <bean id="orcidIdIndexingPlugin" class="com.atmire.dspace.discovery.ORCIDIdIndexingPlugin"/>
 
     <alias name="solrServiceResourceIndexPlugin" alias="org.dspace.discovery.SolrServiceResourceRestrictionPlugin"/>
 
@@ -109,6 +110,7 @@
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
+                <ref bean="searchFilterOrcidFromAuthority" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -214,6 +216,7 @@
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
+                <ref bean="searchFilterOrcidFromAuthority" />
             </list>
         </property>
         <!--The sort filters for the discovery search (same as defaultConfiguration above)-->
@@ -403,6 +406,16 @@
         </property>
         <property name="type" value="date"/>
         <property name="sortOrder" value="VALUE"/>
+    </bean>
+
+    <bean class="org.dspace.discovery.configuration.DiscoverySearchFilter" id="searchFilterOrcidFromAuthority">
+        <property name="indexFieldName" value="orcidid" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.identifier.orcid</value>
+                <value>orcid_id</value>
+            </list>
+        </property>
     </bean>
 
     <!--Sort properties-->

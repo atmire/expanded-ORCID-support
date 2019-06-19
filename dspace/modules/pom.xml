@@ -10,7 +10,7 @@
 		<groupId>org.dspace</groupId>
 		<artifactId>dspace-parent</artifactId>
 		<version>5.10</version>
-		<relativePath>../../../../../Downloads/dspace-5.10-release/pom.xml</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 
     <properties>

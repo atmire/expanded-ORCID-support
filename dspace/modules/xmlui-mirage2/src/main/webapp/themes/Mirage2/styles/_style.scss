@@ -21,3 +21,12 @@
     color: white;
     background: hotpink;
 }
+
+.orcid_icon {
+
+    margin-top: -2px;
+
+    &:hover {
+        text-decoration: none;
+    }
+}

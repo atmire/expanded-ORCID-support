@@ -44,6 +44,9 @@
     <alias name="OrcidSource" alias="AuthoritySource"/>
     <bean name="OrcidSource" class="org.dspace.authority.orcid.Orcidv2" init-method="init">
         <constructor-arg value="https://pub.orcid.org/v2.1"/>
+        <constructor-arg value="https://api.orcid.org/oauth/token"/>
+        <constructor-arg value=""/>
+        <constructor-arg value=""/>
     </bean>
 
 
