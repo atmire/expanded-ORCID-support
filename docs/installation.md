@@ -1,6 +1,6 @@
 # Installation
 
-To install the patch, the following steps will need to be performed.
+To install this patch, the following steps will need to be performed.
 
 ## 1. Go to the `dspace` directory
 
@@ -27,7 +27,7 @@ Run the following command where `<patch>` needs to be replaced with the name of 
 git apply --check <patch>
 ```
 
-This command will return whether it is possible to apply the patch to your installation. This should pose no problems in case the DSpace is not customized or in case few customizations are present.
+This command will return whether it is possible to apply the patch to your installation or not. This should pose no problems in case the DSpace is not customised or in case few customisations are present.
 In case the check is successful, the patch can be installed as explained in the next steps.
 
 ## 3. Apply the patch
