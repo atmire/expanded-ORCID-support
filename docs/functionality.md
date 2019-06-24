@@ -47,7 +47,8 @@ To update an existing item with an additional author and his ORCID ID, the follo
 For adding the Test, Author value and his ORCID ID, this would look like this:
 
 ```bash
-Test, Author::0000-0002-9315-2622`
+Test, Author::0000-0002-9315-2622
+```
 
 When the ORCID ID that was specified is not found, the author name and ORCID ID will still be added to the item. A new authority will be created with this ORCID ID. When the ORCID ID is immediately found, on the contrary, DSpace will add the author name, ORCID ID and the existing authority key to the item in question. 
 
