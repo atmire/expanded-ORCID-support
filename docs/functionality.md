@@ -62,8 +62,16 @@ It is also possible to update an existing item with an additional author without
 
 ## Display of the ORCID ID Icon on the item page
 
-This ORCID patch will trigger the appearance of the ORCID icon behind authors that have been linked to an ORCID authority on the simple item page. When a user clicks this icon, he/she will be redirected to the ORCID profile page of that specific author. 
+This ORCID patch will trigger the appearance of the ORCID icon behind authors that have been linked to an ORCID authority on the simple item page. When a user clicks this icon, he/she will be redirected to the ORCID profile page of that specific author.
+
+![ORCIDIDbadge](_Images/ORCID_ID_Icon_ItemPage.png "ORCIDIDBadge")
 
 ## Advanced Search on ORCID ID
 
-After installation of this ORCID patch, users will be able to search DSpace via an advanced filter on ORCID ID. As any other filter, this ORCID filter is available from the discovery menu. It can be selected in the dropdown menu that is shown after clicking “Show Advanced Filters”. This feature is also triggered when the name of an ORCID author is clicked from the simple item page. In those cases, the user will be sent to a discovery page where that author’s ORCID ID is set as a search filter. From there on, he can consult all other items that are linked to the same ORCID ID.
+After installation of this ORCID patch, users will be able to search DSpace via an advanced filter on ORCID ID. As any other filter, this ORCID filter is available from the discovery menu. It can be selected in the dropdown menu that is shown after clicking “Show Advanced Filters”. 
+
+![ORCIDAdvancedFilter](_Images/Advancedfilter_ORCIDID.png "ORCIDAdvancedFilter")
+
+This feature is also triggered when the name of an ORCID author is clicked from the simple item page. In those cases, the user will be sent to a discovery page where that author’s ORCID ID is set as a search filter. From there on, he can consult all other items that are linked to the same ORCID ID.
+
+![ORCIDSearchFacet](_Images/ORCIDID_searchfacet.png "ORCIDSearchFacet")
