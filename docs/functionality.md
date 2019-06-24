@@ -6,11 +6,15 @@ This patch encompasses an expansion of the default DSpace REST API, item display
 
 The ORCID patch makes it possible to view authorities and ORCID IDs on an item through the DSpace REST API . Both the authority and ORCID information are exposed as part of the author metadata field in the following way: 
 
-`{author name}::{authority key}::{ORCID ID}`
+```bash
+{author name}::{authority key}::{ORCID ID}
+```
 
 For example, for an author named Test, Author, who is linked to the authority key  e095211a53a5964eb982c27c55282215 and has ORCID ID 0000-0002-9315-2622, the information displayed would look as follows: 
 
-`Test, Author::e095211a53a5964eb982c27c55282215::0000-0002-9315-2622`
+```bash
+Test, Author::e095211a53a5964eb982c27c55282215::0000-0002-9315-2622
+```
 
 ## Adding Authorities and ORCID IDs through the REST API
 
@@ -20,11 +24,15 @@ Next to viewing authorities and ORCID IDs on an existing item, this patch also m
 
 To update an existing item with an additional author that already has an authority key assigned, the following syntax can be used:
 
-`{author name}::{authority key}`
+```bash
+{author name}::{authority key}
+```
 
 For adding the Test, Author and his authority key, this would look like like this:
 
-`Test, Author::e095211a53a5964eb982c27c55282215`
+```bash
+Test, Author::e095211a53a5964eb982c27c55282215
+```
 
 In case the authority value that was specified is not found, the author name will still be added to the item but without the authority. When the authority value is found, on the contrary, both the author name and attached authority key will be added to the item to ensure a consistent display of metadata in the repository. 
 
@@ -32,11 +40,14 @@ In case the authority value that was specified is not found, the author name wil
 
 To update an existing item with an additional author and his ORCID ID, the following syntax can be used:
 
-`{author name}::{ORCID}`
+```bash
+{author name}::{ORCID}
+```
 
 For adding the Test, Author value and his ORCID ID, this would look like this:
 
-`Test, Author::0000-0002-9315-2622`
+```bash
+Test, Author::0000-0002-9315-2622`
 
 When the ORCID ID that was specified is not found, the author name and ORCID ID will still be added to the item. A new authority will be created with this ORCID ID. When the ORCID ID is immediately found, on the contrary, DSpace will add the author name, ORCID ID and the existing authority key to the item in question. 
 
