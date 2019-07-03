@@ -7,6 +7,31 @@
  */
 package org.dspace.rest;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import com.atmire.dspace.content.authority.util.AuthorityUtil;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
@@ -17,7 +42,11 @@ import org.dspace.content.Bundle;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
-import org.dspace.content.service.*;
+import org.dspace.content.service.BitstreamFormatService;
+import org.dspace.content.service.BitstreamService;
+import org.dspace.content.service.BundleService;
+import org.dspace.content.service.CollectionService;
+import org.dspace.content.service.ItemService;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.rest.common.Bitstream;
@@ -25,21 +54,6 @@ import org.dspace.rest.common.Item;
 import org.dspace.rest.common.MetadataEntry;
 import org.dspace.rest.exceptions.ContextException;
 import org.dspace.usage.UsageEvent;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Class which provide all CRUD methods over items.
@@ -373,14 +387,8 @@ public class ItemsResource extends Resource
 
             writeStats(dspaceItem, UsageEvent.Action.UPDATE, user_ip, user_agent, xforwardedfor, headers, request, context);
 
-            for (MetadataEntry entry : metadata)
-            {
-                // TODO Test with Java split
-                String data[] = mySplit(entry.getKey()); // Done by my split, because of java split was not function.
-                if ((data.length >= 2) && (data.length <= 3))
-                {
-                    itemService.addMetadata(context, dspaceItem, data[0], data[1], data[2], entry.getLanguage(), entry.getValue());
-                }
+            for (MetadataEntry entry : metadata) {
+                addMetadataEntry(context, dspaceItem, entry);
             }
             context.complete();
 
@@ -401,6 +409,36 @@ public class ItemsResource extends Resource
 
         log.info("Metadata to item(id=" + itemId + ") were successfully added.");
         return Response.status(Status.OK).build();
+    }
+
+    private void addMetadataEntry(final org.dspace.core.Context context, final org.dspace.content.Item dspaceItem,
+                                  final MetadataEntry entry) throws SQLException {
+        String data[] = mySplit(entry.getKey());
+        if ((data.length >= 2) && (data.length <= 3)) {
+            String[] value = splitAuthority(entry.getValue());
+            if (value.length > 1) {
+
+                MetadataField metadataField = ContentServiceFactory.getInstance().getMetadataFieldService()
+                                                                   .findByElement(context, data[0], data[1], data[2]);
+                MetadataValue metadataValue = ContentServiceFactory.getInstance().getMetadataValueService()
+                                                                   .create(context, dspaceItem, metadataField);
+
+                metadataValue.setLanguage(entry.getLanguage());
+                metadataValue.setValue(value[0]);
+                metadataValue.setAuthority(value[1]);
+
+                AuthorityUtil authorityUtil = new AuthorityUtil();
+
+                if (authorityUtil.isOrcidFormat(metadataValue.getAuthority())) {
+                    authorityUtil.addMetadataWithOrcid(context, dspaceItem, metadataValue);
+                } else {
+                    authorityUtil.addMetadataWithAuthority(context, dspaceItem, metadataValue);
+                }
+            } else {
+                itemService.addMetadata(context, dspaceItem, data[0], data[1], data[2], entry.getLanguage(),
+                                        entry.getValue());
+            }
+        }
     }
 
     /**
@@ -626,31 +664,7 @@ public class ItemsResource extends Resource
 
             log.trace("Adding new metadata to item.");
             for (MetadataEntry entry : metadata) {
-                String data[] = mySplit(entry.getKey());
-                if ((data.length >= 2) && (data.length <= 3)) {
-                    String[] value = splitAuthority(entry.getValue());
-                    if (value.length > 1) {
-
-                        MetadataField metadataField = ContentServiceFactory.getInstance().getMetadataFieldService()
-                                .findByElement(context, data[0], data[1], data[2]);
-                        MetadataValue metadataValue = ContentServiceFactory.getInstance().getMetadataValueService()
-                                .create(context, dspaceItem, metadataField);
-
-                        metadataValue.setLanguage(entry.getLanguage());
-                        metadataValue.setValue(value[0]);
-                        metadataValue.setAuthority(value[1]);
-
-                        AuthorityUtil authorityUtil = new AuthorityUtil();
-
-                        if (authorityUtil.isOrcidFormat(metadataValue.getAuthority())) {
-                            authorityUtil.addMetadataWithOrcid(context, dspaceItem, metadataValue);
-                        } else {
-                            authorityUtil.addMetadataWithAuthority(context, dspaceItem, metadataValue);
-                        }
-                    } else {
-                        itemService.addMetadata(context, dspaceItem, data[0], data[1], data[2], entry.getLanguage(), entry.getValue());
-                    }
-                }
+                addMetadataEntry(context, dspaceItem, entry);
             }
             //Update the item to ensure that all the events get fired.
             itemService.update(context, dspaceItem);
