@@ -663,17 +663,18 @@ public class ItemsResource extends Resource
         String data[] = mySplit(entry.getKey());
         if ((data.length >= 2) && (data.length <= 3)) {
             String[] value = splitAuthority(entry.getValue());
+
+            Metadatum metadatum = new Metadatum();
+            metadatum.schema = data[0];
+            metadatum.element = data[1];
+            metadatum.qualifier = data[2];
+            metadatum.language = entry.getLanguage();
+            metadatum.value = value[0];
+
+            AuthorityUtil authorityUtil = new AuthorityUtil();
+
             if (value.length > 1) {
-
-                Metadatum metadatum = new Metadatum();
-                metadatum.schema = data[0];
-                metadatum.element = data[1];
-                metadatum.qualifier = data[2];
-                metadatum.language = entry.getLanguage();
-                metadatum.value = value[0];
                 metadatum.authority = value[1];
-
-                AuthorityUtil authorityUtil = new AuthorityUtil();
 
                 if (authorityUtil.isOrcidFormat(metadatum.authority)) {
                     authorityUtil.addMetadataWithOrcid(context, dspaceItem, metadatum);
@@ -681,7 +682,7 @@ public class ItemsResource extends Resource
                     authorityUtil.addMetadataWithAuthority(context, dspaceItem, metadatum);
                 }
             } else {
-                dspaceItem.addMetadata(data[0], data[1], data[2], entry.getLanguage(), entry.getValue());
+                authorityUtil.addMetadataWhenNoAuthorityIsProvided(context, dspaceItem, metadatum);
             }
         }
     }

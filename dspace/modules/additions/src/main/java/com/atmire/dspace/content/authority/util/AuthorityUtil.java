@@ -3,12 +3,14 @@ package com.atmire.dspace.content.authority.util;
 import org.apache.log4j.Logger;
 import org.dspace.authority.AuthorityValue;
 import org.dspace.authority.AuthorityValueFinder;
+import org.dspace.authority.PersonAuthorityValue;
 import org.dspace.authority.indexer.AuthorityIndexingService;
-import org.dspace.authority.orcid.Orcidv2;
 import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.content.Item;
 import org.dspace.content.Metadatum;
+import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.content.authority.Choices;
+import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.core.Context;
 import org.dspace.utils.DSpace;
 
@@ -27,19 +29,21 @@ public class AuthorityUtil {
     public void addMetadataWithOrcid(Context context, Item item, Metadatum metadatum) {
 
         String orcidID = metadatum.authority;
-        String orcidAuthority = null;
+        String orcidAuthorityID = null;
 
         if (isOrcidFormat(orcidID)) {
 
-            orcidAuthority = new AuthorityValueFinder().findByOrcidID(context, orcidID).getId();
+            AuthorityValue orcidAuthority = new AuthorityValueFinder().findByOrcidID(context, orcidID);
             if (orcidAuthority == null) {
-                orcidAuthority = createOrcidAuthority(metadatum, orcidID);
+                orcidAuthorityID = createOrcidAuthority(metadatum, orcidID);
+            } else {
+                orcidAuthorityID = orcidAuthority.getId();
             }
         }
 
-        if (orcidAuthority != null) {
+        if (orcidAuthorityID != null) {
             item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier, metadatum.language,
-                    metadatum.value, orcidAuthority, Choices.CF_ACCEPTED);
+                    metadatum.value, orcidAuthorityID, Choices.CF_ACCEPTED);
 
         } else {
             item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier, metadatum.language,
@@ -56,6 +60,7 @@ public class AuthorityUtil {
 
         Orcidv2AuthorityValue authorityValue = Orcidv2AuthorityValue.create();
         authorityValue.setValue(metadatum.value);
+        authorityValue.setField(metadatum.getField().replaceAll("\\.", "_"));
 
         return updateOrcidAuthorityValue(orcidID, authorityValue);
     }
@@ -77,7 +82,7 @@ public class AuthorityUtil {
         value.setCreationDate(now);
         indexingService.indexContent(value, false);
         indexingService.commit();
-        return value.getOrcid_id();
+        return value.getId();
     }
 
     public void addMetadataWithAuthority(Context context, Item item, final Metadatum metadatum) {
@@ -89,6 +94,50 @@ public class AuthorityUtil {
             item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier, metadatum.language,
                     metadatum.value);
         }
+    }
+
+    public void addMetadataWhenNoAuthorityIsProvided(Context context, Item item, Metadatum metadatum) {
+        MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
+        String fieldKey = MetadataAuthorityManager
+                .makeFieldKey(metadatum.schema, metadatum.element, metadatum.qualifier);
+
+        boolean fieldAdded = false;
+
+        if ( mam.isAuthorityControlled(fieldKey)) {
+            if (isPersonAuthority(fieldKey)) {
+
+                Choices c = ChoiceAuthorityManager.getManager().getBestMatch(fieldKey, metadatum.value, -1, null);
+                if (c.values.length > 0) {
+                    AuthorityValue matchedAuthority = new AuthorityValueFinder().findByUID(context, c.values[0].authority);
+                    if (matchedAuthority instanceof Orcidv2AuthorityValue) {
+
+                        item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier,
+                                metadatum.language,
+                                metadatum.value, matchedAuthority.getId(), Choices.CF_ACCEPTED);
+
+                        fieldAdded = true;
+
+                    } else {
+                        item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier,
+                                metadatum.language,
+                                metadatum.value, c.values[0].authority, c.confidence);
+                        fieldAdded = true;
+                    }
+                }
+            }
+        }
+
+        // make sure the field is always added to the metadata
+        if(!fieldAdded){
+            item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier, metadatum.language,
+                    metadatum.value);
+        }
+    }
+
+    public boolean isPersonAuthority(final String fieldKey) {
+
+        return AuthorityValue.getAuthorityTypes().getFieldDefaults()
+                .get(fieldKey.replaceAll("\\.", "_")) instanceof PersonAuthorityValue;
     }
 
     private String getAuthorityValue(Context context, final Metadatum metadatum) {

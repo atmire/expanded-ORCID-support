@@ -7,6 +7,7 @@
  */
 package org.dspace.authority;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.SolrDocument;
@@ -37,6 +38,20 @@ public class PersonAuthorityValue extends AuthorityValue {
 
     public PersonAuthorityValue(SolrDocument document) {
         super(document);
+    }
+
+    @Override
+    public String getId() {
+        // A PersonValue is considered unique with the first & last name.
+        String nonDigestedIdentifier;
+        if(StringUtils.isNotBlank(firstName)) {
+            nonDigestedIdentifier = org.dspace.authority.PersonAuthorityValue.class.toString() + "field: Person " + "lastName: " + lastName + ", firstName: " + firstName;
+        }
+        else {
+            nonDigestedIdentifier = org.dspace.authority.PersonAuthorityValue.class.toString() + "field: Person " + "lastName: " + lastName ;
+        }
+        // We return an md5 digest of the toString, this will ensure a unique identifier for the same value each time
+        return DigestUtils.md5Hex(nonDigestedIdentifier);
     }
 
     public String getName() {

@@ -7,13 +7,13 @@
  */
 package org.dspace.app.xmlui.objectmanager;
 
+import com.atmire.dspace.content.authority.util.AuthorityUtil;
 import org.dspace.app.util.MetadataExposure;
 import org.dspace.app.util.Util;
 import org.dspace.app.xmlui.wing.AttributeMap;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.authority.AuthorityValue;
 import org.dspace.authority.AuthorityValueFinder;
-import org.dspace.authority.PersonAuthorityValue;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
 import org.dspace.content.*;
@@ -470,10 +470,9 @@ public class ItemAdapter extends AbstractAdapter
 
     private void addORCIDIdIfPresent(AttributeMap attributes, String orcidURL, Metadatum dcv) {
 
-        if (AuthorityValue.getAuthorityTypes().getFieldDefaults()
-                .get(dcv.getField().replaceAll("\\.", "_")) instanceof PersonAuthorityValue) {
+        if (new AuthorityUtil().isPersonAuthority(dcv.getField())) {
 
-            AuthorityValue authorityValue = findCachedAuthorityValueByAuthorityID(context, dcv.authority);
+            AuthorityValue authorityValue = new AuthorityValueFinder().findByUID(context, dcv.authority);
             if (authorityValue != null) {
                 String orcidId = (String) authorityValue.getSolrInputDocument().getFieldValue("orcid_id");
                 if (isNotBlank(orcidId)) {
@@ -481,11 +480,6 @@ public class ItemAdapter extends AbstractAdapter
                 }
             }
         }
-    }
-
-    public AuthorityValue findCachedAuthorityValueByAuthorityID(Context context, String authorityID) {
-
-        return new AuthorityValueFinder().findByUID(context, authorityID);
     }
 
     /**
