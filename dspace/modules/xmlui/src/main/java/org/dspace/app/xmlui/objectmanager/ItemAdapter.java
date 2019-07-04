@@ -7,6 +7,7 @@
  */
 package org.dspace.app.xmlui.objectmanager;
 
+import com.atmire.dspace.content.authority.util.AuthorityUtil;
 import org.dspace.app.util.Util;
 import org.dspace.app.util.factory.UtilServiceFactory;
 import org.dspace.app.util.service.MetadataExposureService;
@@ -502,10 +503,9 @@ public class ItemAdapter extends AbstractAdapter
 
     private void addORCIDIdIfPresent(AttributeMap attributes, String orcidURL, MetadataValue metadataValue) {
 
-        if (AuthorityServiceFactory.getInstance().getAuthorTypes().getFieldDefaults()
-                .get(metadataValue.getMetadataField().toString()) instanceof PersonAuthorityValue) {
+        if (new AuthorityUtil().isPersonAuthority(metadataValue.getMetadataField())) {
 
-            AuthorityValue authorityValue = findCachedAuthorityValueByAuthorityID(context, metadataValue.getAuthority());
+            AuthorityValue authorityValue = AuthorityServiceFactory.getInstance().getAuthorityValueService().findByUID(context, metadataValue.getAuthority());
             if (authorityValue != null) {
                 String orcidId = (String) authorityValue.getSolrInputDocument().getFieldValue("orcid_id");
                 if (isNotBlank(orcidId)) {
@@ -513,11 +513,6 @@ public class ItemAdapter extends AbstractAdapter
                 }
             }
         }
-    }
-
-    public AuthorityValue findCachedAuthorityValueByAuthorityID(Context context, String authorityID) {
-
-        return AuthorityServiceFactory.getInstance().getAuthorityValueService().findByUID(context, authorityID);
     }
 
     /**

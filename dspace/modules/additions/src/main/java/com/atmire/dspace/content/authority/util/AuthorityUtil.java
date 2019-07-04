@@ -2,12 +2,17 @@ package com.atmire.dspace.content.authority.util;
 
 import org.apache.log4j.Logger;
 import org.dspace.authority.AuthorityValue;
+import org.dspace.authority.PersonAuthorityValue;
 import org.dspace.authority.factory.AuthorityServiceFactory;
 import org.dspace.authority.indexer.AuthorityIndexingService;
 import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.Choices;
+import org.dspace.content.authority.factory.ContentAuthorityServiceFactory;
+import org.dspace.content.authority.service.MetadataAuthorityService;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
@@ -30,38 +35,34 @@ public class AuthorityUtil {
             AuthorityServiceFactory.getInstance().getAuthorityValueService();
     private ItemService itemService = ContentServiceFactory.getInstance().getItemService();
 
-    public void addMetadataWithOrcid(Context context, Item item, MetadataValue metadataValue) throws SQLException {
+    public void addMetadataWithOrcid(Context context, Item item, MetadataField metadataField, String value, String authority, String language) throws SQLException {
 
-        String orcidID = metadataValue.getAuthority();
-        String orcidAuthority = null;
+        String orcidAuthorityID = null;
 
-        if (isOrcidFormat(orcidID)) {
+        if (isOrcidFormat(authority)) {
 
-            orcidAuthority = authorityValueService.findByOrcidID(context, orcidID).getId();
+            AuthorityValue orcidAuthority = authorityValueService.findByOrcidID(context, authority);
             if (orcidAuthority == null) {
-                orcidAuthority = createOrcidAuthority(metadataValue, orcidID);
+
+                orcidAuthorityID = createSolrOrcidAuthority(authority, value, metadataField);
+            } else {
+                orcidAuthorityID = orcidAuthority.getId();
             }
         }
 
-        if (orcidAuthority != null) {
-            itemService.addMetadata(context, item, metadataValue.getMetadataField(), metadataValue.getLanguage(),
-                    metadataValue.getValue(), orcidAuthority, CF_ACCEPTED);
+        if (orcidAuthorityID != null) {
+            itemService.addMetadata(context, item, metadataField, language, value, orcidAuthorityID, CF_ACCEPTED);
 
         } else {
-            itemService.addMetadata(context, item, metadataValue.getMetadataField(), metadataValue.getLanguage(),
-                    metadataValue.getValue());
+            itemService.addMetadata(context, item, metadataField, language, value);
         }
     }
 
-    private String createOrcidAuthority(final MetadataValue metadataValue, final String orcidID) {
-
-        return createSolrOrcidAuthority(metadataValue, orcidID);
-    }
-
-    private String createSolrOrcidAuthority(final MetadataValue metadataValue, final String orcidID) {
+    private String createSolrOrcidAuthority(final String orcidID, String value, MetadataField metadataField) {
 
         Orcidv2AuthorityValue authorityValue = Orcidv2AuthorityValue.create();
-        authorityValue.setValue(metadataValue.getValue());
+        authorityValue.setValue(value);
+        authorityValue.setField(metadataField.toString());
 
         return updateOrcidAuthorityValue(orcidID, authorityValue);
     }
@@ -83,25 +84,61 @@ public class AuthorityUtil {
         value.setCreationDate(now);
         indexingService.indexContent(value);
         indexingService.commit();
-        return value.getOrcid_id();
+        return value.getId();
     }
 
-    public void addMetadataWithAuthority(Context context, Item item, final MetadataValue metadataValue) throws SQLException {
-        String authorityValue = getAuthorityValue(context, metadataValue);
+    public void addMetadataWithAuthority(Context context, Item item, MetadataField metadataField, String value, String authority, String language) throws SQLException {
+
+        AuthorityValue authorityValue = authorityValueService.findByUID(context, authority);
+
         if (authorityValue != null) {
-            itemService.addMetadata(context, item, metadataValue.getMetadataField(), metadataValue.getLanguage(),
-                    authorityValue, metadataValue.getAuthority(), CF_ACCEPTED);
+            itemService.addMetadata(context, item, metadataField, language,
+                    authorityValue.getValue(), authority, CF_ACCEPTED);
         } else {
-            itemService.addMetadata(context, item, metadataValue.getMetadataField(), metadataValue.getLanguage(),
-                    metadataValue.getValue());
+            itemService.addMetadata(context, item, metadataField, language, value);
         }
     }
 
-    private String getAuthorityValue(Context context, final MetadataValue metadataValue) {
+    public void addMetadataWhenNoAuthorityIsProvided(Context context, Item item, MetadataField metadataField, String value, String language) throws SQLException {
+        MetadataAuthorityService mam = ContentAuthorityServiceFactory.getInstance().getMetadataAuthorityService();
+        String fieldKey = mam.makeFieldKey(metadataField);
 
-        AuthorityValue authority = authorityValueService
-                .findByUID(context, metadataValue.getAuthority());
+        boolean fieldAdded = false;
 
-        return authority != null ? authority.getValue() : null;
+        if (mam.isAuthorityControlled(fieldKey)) {
+            if (isPersonAuthority(metadataField)) {
+
+                Choices c = ContentAuthorityServiceFactory.getInstance().getChoiceAuthorityService()
+                        .getBestMatch(fieldKey, value, null, null);
+                if (c.values.length > 0) {
+                    AuthorityValue matchedAuthority = authorityValueService.findByUID(context, c.values[0].authority);
+                    if (matchedAuthority instanceof Orcidv2AuthorityValue) {
+
+                        itemService.addMetadata(context, item, metadataField, language, value,
+                                matchedAuthority.getId(), Choices.CF_ACCEPTED);
+
+                        fieldAdded = true;
+
+                    } else {
+                        itemService.addMetadata(context, item, metadataField, language, value,
+                                c.values[0].authority, c.confidence);
+
+                        fieldAdded = true;
+                    }
+                }
+            }
+        }
+
+        // make sure the field is always added to the metadata
+        if (!fieldAdded){
+            itemService.addMetadata(context, item, metadataField, language, value);
+        }
     }
+
+    public boolean isPersonAuthority(MetadataField metadataField) {
+
+        return AuthorityServiceFactory.getInstance().getAuthorTypes().getFieldDefaults()
+                .get(metadataField.toString()) instanceof PersonAuthorityValue;
+    }
+
 }
