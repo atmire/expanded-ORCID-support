@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
@@ -50,6 +51,19 @@ public class Orcidv2AuthorityValue extends PersonAuthorityValue {
      */
     public static final String ORCID_ID_SYNTAX = "\\d{4}-\\d{4}-\\d{4}-(\\d{3}X|\\d{4})";
 
+    @Override
+    public String getId() {
+        // A PersonValue is considered unique with the first & last name.
+        String nonDigestedIdentifier;
+        if(StringUtils.isNotBlank(getFirstName())) {
+            nonDigestedIdentifier = Orcidv2AuthorityValue.class.toString() + "field: Person " + "lastName: " + getLastName() + ", firstName: " + getFirstName()+ ", OrcidIdentifier: " + getOrcid_id();
+        }
+        else {
+            nonDigestedIdentifier = Orcidv2AuthorityValue.class.toString() + "field: Person " + "lastName: " + getLastName()+", OrcidIdentifier: " + getOrcid_id() ;
+        }
+        // We return an md5 digest of the toString, this will ensure a unique identifier for the same value each time
+        return DigestUtils.md5Hex(nonDigestedIdentifier);
+    }
 
     /**
      * Creates an instance of Orcidv2AuthorityValue with only uninitialized fields.
