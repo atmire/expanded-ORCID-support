@@ -168,16 +168,28 @@ public class RestIndex {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response logout(@Context HttpHeaders headers)
     {
+        org.dspace.core.Context context = null;
         List<String> list = headers.getRequestHeader(TokenHolder.TOKEN_HEADER);
         String token = null;
         boolean logout = false;
         EPerson ePerson = null;
-        if (list != null)
-        {
-            token = list.get(0);
-            ePerson = TokenHolder.getEPerson(token);
-            logout = TokenHolder.logout(token);
+        try {
+            if (list != null)
+            {
+                    context = new org.dspace.core.Context();
+                token = list.get(0);
+                    Integer ePersonId = TokenHolder.getEPersonId(token);
+
+                    if (ePersonId != null) {
+                        ePerson = EPerson.find(context, ePersonId);
+                        logout = TokenHolder.logout(context, token);
+                    }
+            }
+        } catch (SQLException e) {
+            Resource.processException("Status eperson db lookup error: " + e.getMessage(), context);
         }
+
+
         if ((token == null) || (!logout))
         {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -204,28 +216,28 @@ public class RestIndex {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Status status(@Context HttpHeaders headers) throws UnsupportedEncodingException {
         org.dspace.core.Context context = null;
-
         try {
-            context = Resource.createContext(Resource.getUser(headers));
+            EPerson user = Resource.getUser(headers);
+            context = Resource.createContext(user);
             EPerson ePerson = context.getCurrentUser();
 
-            if(ePerson != null) {
+            if (ePerson != null) {
                 //DB EPerson needed since token won't have full info, need context
                 EPerson dbEPerson = EPerson.findByEmail(context, ePerson.getEmail());
                 String token = Resource.getToken(headers);
-                Status status = new Status(dbEPerson.getEmail(), dbEPerson.getFullName(), token);
-                return status;
+                return new Status(dbEPerson.getEmail(), dbEPerson.getFullName(), token);
             }
 
-        } catch (ContextException e)
-        {
+        } catch (ContextException e) {
             Resource.processException("Status context error: " + e.getMessage(), context);
         } catch (SQLException e) {
             Resource.processException("Status eperson db lookup error: " + e.getMessage(), context);
         } catch (AuthorizeException e) {
             Resource.processException("Status eperson authorize exception: " + e.getMessage(), context);
         } finally {
-            context.abort();
+            if (context != null) {
+                context.abort();
+            }
         }
 
         //fallback status, unauth

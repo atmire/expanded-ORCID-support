@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.rest.common.User;
 
@@ -35,7 +36,7 @@ public class TokenHolder
 
     private static Map<String, String> tokens = new HashMap<String, String>(); // Map with pair Email,token
 
-    private static Map<String, EPerson> persons = new HashMap<String, EPerson>(); // Map with pair token,Eperson
+    private static Map<String, Integer> persons = new HashMap<String, Integer>(); // Map with pair token,Eperson id
 
     /**
      * Login user into rest api. It check user credentials if they are okay.
@@ -72,7 +73,7 @@ public class TokenHolder
                 else
                 {
                     token = generateToken();
-                    persons.put(token, dspaceUser);
+                    persons.put(token, dspaceUser.getID());
                     tokens.put(user.getEmail(), token);
                 }
             }
@@ -111,10 +112,10 @@ public class TokenHolder
      * 
      * @param token
      *            Token under which is stored eperson.
-     * @return Return instance of EPerson if is token right, otherwise it
+     * @return Return EPerson id if token is right, otherwise it
      *         returns NULL.
      */
-    public static synchronized EPerson getEPerson(String token)
+    public static synchronized Integer getEPersonId(String token)
     {
         return persons.get(token);
     }
@@ -126,19 +127,24 @@ public class TokenHolder
      *            Token under which is stored eperson.
      * @return Return true if was all okay, otherwise return false.
      */
-    public static synchronized boolean logout(String token)
+    public static synchronized boolean logout(Context context, String token) throws SQLException
     {
         if ((token == null) || (persons.get(token) == null))
         {
             return false;
         }
-        String email = persons.get(token).getEmail();
-        EPerson person = persons.remove(token);
-        if (person == null)
+        Integer personId = persons.get(token);
+        EPerson person = EPerson.find(context, personId);
+
+        personId = persons.remove(token);
+        if (personId == null)
         {
             return false;
         }
+        if (person != null) {
+            String email = person.getEmail();
         tokens.remove(email);
+        }
         return true;
     }
 
