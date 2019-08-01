@@ -87,6 +87,29 @@ public class AuthorityUtil {
         return value.getId();
     }
 
+    public void addMetadata(Context context, Item dspaceItem, String[] field, String value, String language) throws SQLException {
+
+        MetadataField metadataField = ContentServiceFactory.getInstance().getMetadataFieldService()
+                .findByElement(context, field[0], field[1], field[2]);
+
+        String[] splitAuthority = splitAuthority(value);
+        if (splitAuthority.length > 1) {
+
+            String authority = splitAuthority[1];
+            if (isOrcidFormat(authority)) {
+                addMetadataWithOrcid(context, dspaceItem, metadataField, splitAuthority[0], authority, language);
+            } else {
+                addMetadataWithAuthority(context, dspaceItem, metadataField, splitAuthority[0], authority, language);
+            }
+        } else {
+            addMetadataWhenNoAuthorityIsProvided(context, dspaceItem, metadataField, splitAuthority[0], language);
+        }
+    }
+
+    private String[] splitAuthority(final String value) {
+        return value.split("::");
+    }
+
     public void addMetadataWithAuthority(Context context, Item item, MetadataField metadataField, String value, String authority, String language) throws SQLException {
 
         AuthorityValue authorityValue = authorityValueService.findByUID(context, authority);

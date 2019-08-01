@@ -7,6 +7,7 @@
  */
 package org.dspace.rest;
 
+import com.atmire.dspace.content.authority.util.AuthorityUtil;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
@@ -352,7 +353,7 @@ public class CollectionsResource extends Resource
                 for (MetadataEntry entry : item.getMetadata())
                 {
                     String data[] = mySplit(entry.getKey());
-                    itemService.addMetadata(context, dspaceItem, data[0], data[1], data[2], entry.getLanguage(), entry.getValue());
+                    new AuthorityUtil().addMetadata(context, dspaceItem, data, entry.getValue(), entry.getLanguage());
                 }
             }
 

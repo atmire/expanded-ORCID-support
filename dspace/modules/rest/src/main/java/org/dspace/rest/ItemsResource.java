@@ -14,8 +14,6 @@ import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.Bundle;
-import org.dspace.content.MetadataField;
-import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.*;
 import org.dspace.eperson.factory.EPersonServiceFactory;
@@ -402,24 +400,8 @@ public class ItemsResource extends Resource
 
         String data[] = mySplit(entry.getKey());
         if ((data.length >= 2) && (data.length <= 3)) {
-            String[] value = splitAuthority(entry.getValue());
 
-            MetadataField metadataField = ContentServiceFactory.getInstance().getMetadataFieldService()
-                    .findByElement(context, data[0], data[1], data[2]);
-
-            AuthorityUtil authorityUtil = new AuthorityUtil();
-
-            if (value.length > 1) {
-
-                String authority = value[1];
-                if (authorityUtil.isOrcidFormat(authority)) {
-                    authorityUtil.addMetadataWithOrcid(context, dspaceItem, metadataField, value[0], authority, entry.getLanguage());
-                } else {
-                    authorityUtil.addMetadataWithAuthority(context, dspaceItem, metadataField, value[0], authority, entry.getLanguage());
-                }
-            } else {
-                authorityUtil.addMetadataWhenNoAuthorityIsProvided(context, dspaceItem, metadataField, value[0], entry.getLanguage());
-            }
+            new AuthorityUtil().addMetadata(context, dspaceItem, data, entry.getValue(), entry.getLanguage());
         }
     }
 
@@ -672,10 +654,6 @@ public class ItemsResource extends Resource
 
         log.info("Metadata of item(id=" + itemId + ") were successfully updated.");
         return Response.status(Status.OK).build();
-    }
-
-    private String[] splitAuthority(final String value) {
-        return value.split("::");
     }
 
     /**
