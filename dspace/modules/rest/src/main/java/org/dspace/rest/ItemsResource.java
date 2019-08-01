@@ -7,31 +7,6 @@
  */
 package org.dspace.rest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.atmire.dspace.content.authority.util.AuthorityUtil;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
@@ -49,6 +24,21 @@ import org.dspace.rest.exceptions.ContextException;
 import org.dspace.storage.rdbms.TableRow;
 import org.dspace.storage.rdbms.TableRowIterator;
 import org.dspace.usage.UsageEvent;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class which provide all CRUD methods over items.
@@ -659,36 +649,13 @@ public class ItemsResource extends Resource
     }
 
     private void addMetadataEntry(org.dspace.core.Context context, org.dspace.content.Item dspaceItem,
-                                  MetadataEntry entry) {
+                                  MetadataEntry entry) throws SQLException {
+
         String data[] = mySplit(entry.getKey());
         if ((data.length >= 2) && (data.length <= 3)) {
-            String[] value = splitAuthority(entry.getValue());
 
-            Metadatum metadatum = new Metadatum();
-            metadatum.schema = data[0];
-            metadatum.element = data[1];
-            metadatum.qualifier = data[2];
-            metadatum.language = entry.getLanguage();
-            metadatum.value = value[0];
-
-            AuthorityUtil authorityUtil = new AuthorityUtil();
-
-            if (value.length > 1) {
-                metadatum.authority = value[1];
-
-                if (authorityUtil.isOrcidFormat(metadatum.authority)) {
-                    authorityUtil.addMetadataWithOrcid(context, dspaceItem, metadatum);
-                } else {
-                    authorityUtil.addMetadataWithAuthority(context, dspaceItem, metadatum);
-                }
-            } else {
-                authorityUtil.addMetadataWhenNoAuthorityIsProvided(context, dspaceItem, metadatum);
-            }
+            new AuthorityUtil().addMetadata(context, dspaceItem, data, entry.getValue(), entry.getLanguage());
         }
-    }
-
-    private String[] splitAuthority(final String value) {
-        return value.split("::");
     }
 
     /**

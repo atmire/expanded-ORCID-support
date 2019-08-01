@@ -14,6 +14,7 @@ import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.core.Context;
 import org.dspace.utils.DSpace;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
@@ -83,6 +84,34 @@ public class AuthorityUtil {
         indexingService.indexContent(value, false);
         indexingService.commit();
         return value.getId();
+    }
+
+    public void addMetadata(Context context, Item dspaceItem, String[] field, String value, String language) throws SQLException {
+
+        String[] splitAuthority = splitAuthority(value);
+
+        Metadatum metadatum = new Metadatum();
+        metadatum.schema = field[0];
+        metadatum.element = field[1];
+        metadatum.qualifier = field[2];
+        metadatum.language = language;
+        metadatum.value = splitAuthority[0];
+
+        if (splitAuthority.length > 1) {
+
+            metadatum.authority = splitAuthority[1];
+            if (isOrcidFormat(metadatum.authority)) {
+                addMetadataWithOrcid(context, dspaceItem, metadatum);
+            } else {
+                addMetadataWithAuthority(context, dspaceItem, metadatum);
+            }
+        } else {
+            addMetadataWhenNoAuthorityIsProvided(context, dspaceItem, metadatum);
+        }
+    }
+
+    private String[] splitAuthority(final String value) {
+        return value.split("::");
     }
 
     public void addMetadataWithAuthority(Context context, Item item, final Metadatum metadatum) {

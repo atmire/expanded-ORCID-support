@@ -7,6 +7,7 @@
  */
 package org.dspace.rest;
 
+import com.atmire.dspace.content.authority.util.AuthorityUtil;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
@@ -346,7 +347,7 @@ public class CollectionsResource extends Resource
                 for (MetadataEntry entry : item.getMetadata())
                 {
                     String data[] = mySplit(entry.getKey());
-                    dspaceItem.addMetadata(data[0], data[1], data[2], entry.getLanguage(), entry.getValue());
+                    new AuthorityUtil().addMetadata(context, dspaceItem, data, entry.getValue(), entry.getLanguage());
                 }
             }
             workspaceItem.update();
@@ -471,7 +472,7 @@ public class CollectionsResource extends Resource
 
     /**
      * Delete collection.
-     * 
+     *
      * @param collectionId
      *            Id of collection which will be deleted.
      * @param headers
@@ -540,10 +541,10 @@ public class CollectionsResource extends Resource
 
     /**
      * Delete item in collection.
-     * 
+     *
      * @param collectionId
      *            Id of collection which will be deleted.
-     * 
+     *
      * @param itemId
      *            Id of item in colletion.
      * @return It returns status code: OK(200). NOT_FOUND(404) if item or
@@ -645,7 +646,7 @@ public class CollectionsResource extends Resource
 
     /**
      * Search for first collection with passed name.
-     * 
+     *
      * @param name
      *            Name of collection.
      * @param headers
