@@ -75,6 +75,8 @@ public class PersonAuthorityValue extends AuthorityValue {
                 setLastName(split[0].trim());
                 if (split.length > 1) {
                     setFirstName(split[1].trim());
+                } else {
+                    setFirstName(null);
                 }
             }
         }

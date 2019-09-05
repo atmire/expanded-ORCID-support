@@ -1,23 +1,23 @@
-package com.atmire.dspace.content.authority.util;
+package org.dspace.authority;
 
 import org.apache.log4j.Logger;
-import org.dspace.authority.AuthorityValue;
-import org.dspace.authority.PersonAuthorityValue;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.authority.factory.AuthorityServiceFactory;
 import org.dspace.authority.indexer.AuthorityIndexingService;
 import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
-import org.dspace.content.MetadataValue;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.factory.ContentAuthorityServiceFactory;
 import org.dspace.content.authority.service.MetadataAuthorityService;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
+import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.utils.DSpace;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -160,8 +160,17 @@ public class AuthorityUtil {
 
     public boolean isPersonAuthority(MetadataField metadataField) {
 
-        return AuthorityServiceFactory.getInstance().getAuthorTypes().getFieldDefaults()
-                .get(metadataField.toString()) instanceof PersonAuthorityValue;
+        return isPersonAuthority(metadataField.toString());
     }
 
+    public boolean isPersonAuthority(String metadataField) {
+
+        return AuthorityServiceFactory.getInstance().getAuthorTypes().getFieldDefaults()
+                .get(metadataField) instanceof PersonAuthorityValue;
+    }
+
+    public void deleteAuthorityValueById(String id) throws IOException, SolrServerException {
+        ((AuthoritySolrServiceImpl) indexingService).getSolr().deleteByQuery("id:\"" + id + "\"");
+        indexingService.commit();
+    }
 }

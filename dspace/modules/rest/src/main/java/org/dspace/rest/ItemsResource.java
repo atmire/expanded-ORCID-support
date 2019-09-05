@@ -7,7 +7,7 @@
  */
 package org.dspace.rest;
 
-import com.atmire.dspace.content.authority.util.AuthorityUtil;
+import org.dspace.authority.AuthorityUtil;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;

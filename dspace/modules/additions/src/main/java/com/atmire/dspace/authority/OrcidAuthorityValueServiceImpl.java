@@ -4,8 +4,10 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.dspace.authority.AuthorityUtil;
 import org.dspace.authority.AuthorityValue;
 import org.dspace.authority.AuthorityValueServiceImpl;
+import org.dspace.authority.PersonAuthorityValue;
 import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.content.authority.SolrAuthority;
 import org.dspace.core.Context;
@@ -33,7 +35,10 @@ public class OrcidAuthorityValueServiceImpl extends AuthorityValueServiceImpl {
                     if ("orcid".equals(document.getFieldValue("authority_type"))) {
                         authorityValue = new Orcidv2AuthorityValue(document);
                         ((Orcidv2AuthorityValue) authorityValue).setOrcid_id((String) document.getFieldValue("orcid_id"));
-                    } else { authorityValue = new AuthorityValue(document);
+                    } else if (new AuthorityUtil().isPersonAuthority(document.getFieldValue("field") + "")) {
+                        authorityValue = new PersonAuthorityValue(document);
+                    } else {
+                        authorityValue = new AuthorityValue(document);
                     }
                     findings.add(authorityValue);
                     log.debug("AuthorityValueFinder found: " + authorityValue.getValue());
