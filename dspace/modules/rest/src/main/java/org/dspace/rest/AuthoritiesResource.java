@@ -8,6 +8,7 @@
 package org.dspace.rest;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.authority.AuthorityUtil;
 import org.dspace.authority.AuthorityValue;
 import org.dspace.authority.AuthorityValueFinder;
@@ -17,6 +18,8 @@ import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.content.Item;
 import org.dspace.content.ItemIterator;
 import org.dspace.discovery.IndexingService;
+import org.dspace.discovery.SearchServiceException;
+import org.dspace.rest.exceptions.ContextException;
 import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.utils.DSpace;
 
@@ -25,13 +28,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.OK;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static javax.ws.rs.core.Response.status;
 import static org.dspace.authority.AuthorityValueGenerator.update;
 import static org.dspace.authorize.AuthorizeManager.isAdmin;
+import static org.dspace.core.ConfigurationManager.getBooleanProperty;
 
 @SuppressWarnings("deprecation")
 @Path("/authorities")
@@ -49,6 +56,10 @@ public class AuthoritiesResource extends Resource {
                                          @QueryParam("userIP") String user_ip, @QueryParam("userAgent") String user_agent,
                                          @QueryParam("xforwardedfor") String xforwardedfor, @Context HttpHeaders headers, @Context HttpServletRequest request)
             throws WebApplicationException {
+
+        if (!getBooleanProperty("authority.person.allow-rest-updates", false)) {
+            throw new WebApplicationException(BAD_REQUEST);
+        }
 
         log.info("Updating value of authority (id: " + authorityId + ") to " + value + ".");
 
@@ -96,7 +107,7 @@ public class AuthoritiesResource extends Resource {
 
             context.complete();
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | SQLException | SearchServiceException | IOException | SolrServerException | ContextException e) {
             processException(
                     "Could not update value of authority (id: " + authorityId + "). Message: " + e.getMessage(), context
             );

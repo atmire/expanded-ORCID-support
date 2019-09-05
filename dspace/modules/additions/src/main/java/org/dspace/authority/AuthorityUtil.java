@@ -1,6 +1,7 @@
 package org.dspace.authority;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.authority.indexer.AuthorityIndexingService;
 import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.content.Item;
@@ -14,6 +15,7 @@ import org.dspace.core.Context;
 import org.dspace.storage.rdbms.TableRowIterator;
 import org.dspace.utils.DSpace;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -187,13 +189,8 @@ public class AuthorityUtil {
         return new ItemIterator(context, rows);
     }
 
-    public void deleteAuthorityValueById(String id) throws Exception {
-        try {
-            ((AuthoritySolrServiceImpl) indexingService).getSolr().deleteByQuery("id:\"" + id + "\"");
-            indexingService.commit();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception(e);
-        }
+    public void deleteAuthorityValueById(String id) throws IOException, SolrServerException {
+        ((AuthoritySolrServiceImpl) indexingService).getSolr().deleteByQuery("id:\"" + id + "\"");
+        indexingService.commit();
     }
 }

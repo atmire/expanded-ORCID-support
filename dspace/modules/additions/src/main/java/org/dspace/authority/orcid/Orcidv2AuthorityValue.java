@@ -7,15 +7,10 @@
  */
 package org.dspace.authority.orcid;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
@@ -243,6 +238,12 @@ public class Orcidv2AuthorityValue extends PersonAuthorityValue {
             }
         }
         return doc;
+    }
+
+    @Override
+    public void setValues(SolrDocument document) {
+        super.setValues(document);
+        this.setOrcid_id(document.getFieldValue("orcid_id").toString());
     }
 
     /**
