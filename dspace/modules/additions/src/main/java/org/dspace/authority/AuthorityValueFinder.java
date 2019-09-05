@@ -101,7 +101,10 @@ public class AuthorityValueFinder {
                     if ("orcid".equals(document.getFieldValue("authority_type"))) {
                         authorityValue = new Orcidv2AuthorityValue(document);
                         ((Orcidv2AuthorityValue) authorityValue).setOrcid_id((String) document.getFieldValue("orcid_id"));
-                    } else { authorityValue = new AuthorityValue(document);
+                    } else if (new AuthorityUtil().isPersonAuthority(document.getFieldValue("field") + "")) {
+                        authorityValue = new PersonAuthorityValue(document);
+                    } else {
+                        authorityValue = new AuthorityValue(document);
                     }
                     findings.add(authorityValue);
                     log.debug("AuthorityValueFinder found: " + authorityValue.getValue());
