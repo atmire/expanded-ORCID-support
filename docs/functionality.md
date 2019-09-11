@@ -60,6 +60,53 @@ It is also possible to update an existing item with an additional author without
 * If an exact string name match is found on an existing authority record that does have an ORCID, the author will not get linked to the existing ORCID authority. A new non-ORCID authority will be created. The author name and the newly created authority will be added to the item. 
 * If no exact string name match is found on an existing authority, the author will not get linked to any existing authority record. A new non-ORCID authority will be created. The author name and the newly created authority will be added to the item. 
 
+## Updating Authornames based on a given Authority
+Next to the basic viewing and adding of authors using the aforementioned calls, an additional endpoint has been created that lets admin user update a given author name (based on a provided authority key).
+Every value related to that given authority will be updated to that provided value.
+Since authorities are such an intrinsic part of the DSpace codebase/submissions, and all related values are updated at once, this functionality has been limited to admin users. (And, by default, this functionality is disabled, more on that in the following part of the documentation)
+
+Updating values can be done by calling the 'authorities/{authority-id}/value' endpoint and providing a value in clear text.
+
+```
+PUT call to: "rest/authorities/929e475f1254f0f875095406757bb8b1/value"
+Providing update value: "Testing, Author-update"
+```
+
+The curl equivalent of this would look something like this (With the relevant information updated to match the correct urls and retrieved dspace-tokens returned during login)
+
+```
+curl -X PUT   ${dspace.rest.endpoint}/authorities/e095211a53a5964eb982c27c55282215/value   -H 'Content-Type: text/plain'  -H 'rest-dspace-token: e66a5850-f30b-4647-bf39-8c162accbd69'  -d 'Testing, Author-update'
+```
+
+Afterwards, this updated value is immediately reflected in both the database (Where ALL metadatavalue instances with the authority used in the call are updated) as well as the actual endpoints showing the item metadata.
+```
+<metadata>
+    <key>dc.contributor.author</key>
+    <value>
+        Testing, Author-update::170147edf5fbed4f916ce6501c3827e5
+    </value>
+    </metadata>
+<metadata>
+```
+
+The same calls can be done for ORICD authorities, but please be advised that, since ORCID authorities are considered an accepted external source, updating ORCID authorities should be done in extremely rare cases. (Since the actual name attached to the ORCID, should NOT be different to the one that is retrieved from the relevant ORCID endpoints)
+
+## Enabling/Disabling certain part of the authority update
+
+As mentioned before, this is a repository wide, quite intrusive, rest endpoint.
+To combat the incorrect use of this which might possibly result in completely unwanted authority updates, this endpoint is disabled by default.
+The actual enabling of the endpoint consists of 2 levels of configuration.
+There is a configuration property that disables/enables the entire endpoint, and another one that disables/enables the ORCID part of this update.
+Enabling the orcid part of this would only work if the actual 'general' endpoint is also enabled.
+
+```
+# Uncomment to allow updates of person authority values through the REST api.
+#authority.allow-rest-updates.person = true
+
+# Uncomment to allow updates of ORCIDS authority values through the REST api.
+#authority.allow-rest-updates.orcid = true
+```
+ 
 ## Display of the ORCID ID Icon on the item page
 
 This ORCID patch will trigger the appearance of the ORCID icon behind authors that have been linked to an ORCID authority on the simple item page. When a user clicks this icon, he/she will be redirected to the ORCID profile page of that specific author.
