@@ -57,7 +57,7 @@ public class AuthoritiesResource extends Resource {
                                          @QueryParam("xforwardedfor") String xforwardedfor, @Context HttpHeaders headers, @Context HttpServletRequest request)
             throws WebApplicationException {
 
-        if (!getBooleanProperty("authority.allow-rest-updates.person", false)) {
+        if (!getBooleanProperty("authority.allow-rest-updates.person", true)) {
             throw new WebApplicationException(BAD_REQUEST);
         }
 
@@ -83,7 +83,7 @@ public class AuthoritiesResource extends Resource {
 
             if (!(authorityValue instanceof Orcidv2AuthorityValue)) {
                 authorityValue = update(authorityValue);
-            } else if (!getBooleanProperty("authority.allow-rest-updates.orcid", false)) {
+            } else if (!getBooleanProperty("authority.allow-rest-updates.orcid", true)) {
                 throw new WebApplicationException(BAD_REQUEST);
             }
 
