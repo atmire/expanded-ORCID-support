@@ -7,6 +7,26 @@
  */
 package org.dspace.rest;
 
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import static javax.ws.rs.core.Response.status;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.authority.AuthorityUtil;
@@ -31,19 +51,6 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Iterator;
-
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
-import static javax.ws.rs.core.Response.Status.*;
-import static javax.ws.rs.core.Response.status;
-
 @SuppressWarnings("deprecation")
 @Path("/authorities")
 public class AuthoritiesResource extends Resource {
@@ -66,7 +73,7 @@ public class AuthoritiesResource extends Resource {
                                          @QueryParam("xforwardedfor") String xforwardedfor, @Context HttpHeaders headers, @Context HttpServletRequest request)
             throws WebApplicationException {
 
-        if (!configurationService.getBooleanProperty("authority.allow-rest-updates.person", false)) {
+        if (!configurationService.getBooleanProperty("authority.allow-rest-updates.person", true)) {
             throw new WebApplicationException(BAD_REQUEST);
         }
 
@@ -92,7 +99,7 @@ public class AuthoritiesResource extends Resource {
 
             if (!(authorityValue instanceof Orcidv2AuthorityValue)) {
                 authorityValue = authorityValueService.update(authorityValue);
-            } else if (!configurationService.getBooleanProperty("authority.allow-rest-updates.orcid", false)) {
+            } else if (!configurationService.getBooleanProperty("authority.allow-rest-updates.orcid", true)) {
                 throw new WebApplicationException(BAD_REQUEST);
             }
 
