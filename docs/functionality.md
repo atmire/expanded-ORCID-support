@@ -1,6 +1,6 @@
 # Functionality overview
 
-This patch encompasses an expansion of the default DSpace REST API, item display and discovery features that allow for additional ORCID functionalities to be made available. 
+This patch encompasses an expansion of the default DSpace REST API, item display and discovery features that allow for additional authority and ORCID functionalities to be made available. 
 
 ## Viewing Authorities and ORCID IDs in the REST API
 
