@@ -1,4 +1,4 @@
-# DSpace ORCID-rest-api
+# Expanded ORCID support for DSpace (Patch)
 
 ## Introduction
 
