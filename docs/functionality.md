@@ -18,7 +18,13 @@ Test, Author::e095211a53a5964eb982c27c55282215::0000-0002-9315-2622
 
 ## Adding Authorities and ORCID IDs through the REST API
 
-Next to viewing authorities and ORCID IDs on items, this patch also makes it possible to add authorities and ORCID IDs to both new and existing items through the REST API. To enable this feature, both the PUT and POST calls have been updated. 
+Next to viewing authorities and ORCID IDs on items, this patch also makes it possible to add authorities and ORCID IDs to both new and existing items through the REST API. To make this possible, following POST and PUT calls, accepting item metadata, have been modified:
+
+```bash
+POST /collections/{collectionId}/items 
+POST /items/{item id}/metadata 
+PUT /items/{item id}/metadata 
+```
 
 ### Adding Authors with a Specified Authority
 
