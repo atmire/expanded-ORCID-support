@@ -4,16 +4,18 @@ This patch encompasses an expansion of the default DSpace REST API, item display
 
 ## Viewing Authorities and ORCID IDs in the REST API
 
-The ORCID patch makes it possible to view authorities and ORCID IDs on an item through the DSpace REST API . Both the authority and ORCID information are exposed as part of the author metadata field in the following way: 
+The patch exposes DSpace authority keys, as well as ORCID IDs, for author metadata through the DSpace REST API. Thanks to this change, consumers of the REST API can read and use the ORCID IDs stored in DSpace.
+
+**Syntax**: Double colon is used as the separator between author string names, authority keys and ORCID ID:
 
 ```bash
 {author name}::{authority key}::{ORCID ID}
 ```
 
-For example, for an author named Test, Author, who is linked to the authority key e095211a53a5964eb982c27c55282215 and has ORCID ID 0000-0002-9315-2622, the information displayed would look as follows: 
+For example, for an author named Babson, Jim, who is linked to the authority key e095211a53a5964eb982c27c55282215 and has ORCID ID 0000-0002-9315-2622, the information displayed would look as follows: 
 
 ```bash
-Test, Author::e095211a53a5964eb982c27c55282215::0000-0002-9315-2622
+Babson, Jim::e095211a53a5964eb982c27c55282215::0000-0002-9315-2622
 ```
 
 ## Adding Authorities and ORCID IDs through the REST API
