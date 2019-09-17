@@ -1,4 +1,4 @@
-# DSpace orcid-rest-api patch
+# Expanded ORCID support for DSpace (Patch)
 
 ## Postcardware
 
