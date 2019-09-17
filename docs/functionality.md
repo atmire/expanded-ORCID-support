@@ -36,10 +36,10 @@ To update an item with an additional author that already has an authority key as
 {author name}::{authority key}
 ```
 
-For adding the Test, Author and his authority key, this would look like like this:
+For adding the Babson, Jim and his authority key, this would look like like this:
 
 ```bash
-Test, Author::e095211a53a5964eb982c27c55282215
+Babson, Jim::e095211a53a5964eb982c27c55282215
 ```
 
 In case the authority value that was specified is not found, the author name will still be added to the item but without the authority. When the authority value is found, on the contrary, both the author name and attached authority key will be added to the item to ensure a consistent display of metadata in the repository. 
@@ -52,10 +52,10 @@ To update an item with an additional author and his ORCID ID, the following synt
 {author name}::{ORCID}
 ```
 
-For adding the Test, Author value and his ORCID ID, this would look like this:
+For adding the Babson, Jim value and his ORCID ID, this would look like this:
 
 ```bash
-Test, Author::0000-0002-9315-2622
+Babson, Jim::0000-0002-9315-2622
 ```
 
 When the ORCID ID that was specified is not found, the author name and ORCID ID will still be added to the item. A new authority will be created with this ORCID ID. When the ORCID ID is immediately found, on the contrary, DSpace will add the author name, ORCID ID and the existing authority key to the item in question. 
@@ -75,7 +75,7 @@ Updating author names can be done by calling the 'authorities/{authority-id}/val
 
 ```
 PUT call to: "rest/authorities/929e475f1254f0f875095406757bb8b1/value"
-Providing update value: "Test, Author-update"
+Providing update value: "Babson, James"
 ```
 
 Once this call is executed, the updated value is immediately reflected in both the database - where all metadatavalue instances with the authority used in the call are updated - and the actual endpoints showing the item metadata.
@@ -83,7 +83,7 @@ Once this call is executed, the updated value is immediately reflected in both t
 <metadata>
     <key>dc.contributor.author</key>
     <value>
-        Testing, Author-update::170147edf5fbed4f916ce6501c3827e5
+        Babson, James::170147edf5fbed4f916ce6501c3827e5
     </value>
     </metadata>
 <metadata>
