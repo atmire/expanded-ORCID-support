@@ -12,7 +12,7 @@ Our addresses are (pick one):
 
 ## Installation and usage
 
-Please refer to the installation instructions and full documentation on [https://atmire.github.io/ORCID-rest-api](https://atmire.github.io/ORCID-rest-api).
+Please refer to the installation instructions and full documentation on [https://atmire.github.io/expanded-ORCID-support](https://atmire.github.io/expanded-ORCID-support).
 
 ## Contributing
 
