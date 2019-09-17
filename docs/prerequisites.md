@@ -2,7 +2,7 @@
 
 ## Codebase
 
-The ORCID-rest-api changes have been released as a patch for DSpace as this allows for the easiest installation process of the incremental codebase.
+The expanded-ORCID-support changes have been released as a patch for DSpace as this allows for the easiest installation process of the incremental codebase.
 
 **__Important note__**: Below, we will explain how to apply the patch to your existing installation. This will affect your source code. Before applying a patch, it is always recommended to create a backup of your DSpace source code.
 
@@ -17,7 +17,7 @@ In order to apply the patch, you will need to locate the **DSpace source code** 
   - README 
 ```
 
-For every release of DSpace, generally two release packages are available. One package has "src" in its name and the other one doesn't. The difference between the two is that the release labelled "src" contains all of the DSpace source code, whereas the other release retrieves precompiled packages for specific DSpace artifacts from maven central. **The ORCID-rest-api patches were designed to work on both "src" and other release packages of DSpace**.
+For every release of DSpace, generally two release packages are available. One package has "src" in its name and the other one doesn't. The difference between the two is that the release labelled "src" contains all of the DSpace source code, whereas the other release retrieves precompiled packages for specific DSpace artifacts from maven central. **The expanded-ORCID-support patches were designed to work on both "src" and other release packages of DSpace**.
 
 To be able to install the patch, you will need the following prerequisites:
 
@@ -29,12 +29,12 @@ To be able to install the patch, you will need the following prerequisites:
 
 ## Download patch
 
-Atmire's modifications to a standard DSpace for the ORCID-rest-api are tracked on Github. The newest patch can therefore be generated from git.
+Atmire's modifications to a standard DSpace for the expanded-ORCID-support are tracked on Github. The newest patch can therefore be generated from git.
 
 | DSpace | Patch                                                                       |
 | ------ | --------------------------------------------------------------------------- |
-| 5.x    | [Download](https://github.com/atmire/ORCID-rest-api/compare/dspace_5x…stable_5x.diff) |
-| 6.x    | [Download](https://github.com/atmire/ORCID-rest-api/compare/dspace_6x…stable_6x.diff) |
+| 5.x    | [Download](https://github.com/atmire/expanded-ORCID-support/compare/dspace_5x…stable_5x.diff) |
+| 6.x    | [Download](https://github.com/atmire/expanded-ORCID-support/compare/dspace_6x…stable_6x.diff) |
 
 
 Save this file under a meaningful name. It will later be referred to as `<patch>`.
