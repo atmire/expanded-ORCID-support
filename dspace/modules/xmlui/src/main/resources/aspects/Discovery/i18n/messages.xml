@@ -90,7 +90,7 @@
     <message key="xmlui.ArtifactBrowser.SimpleSearch.filter.title">Title</message>
     <message key="xmlui.ArtifactBrowser.SimpleSearch.filter.subject">Subject</message>
     <message key="xmlui.ArtifactBrowser.SimpleSearch.filter.dateIssued">Date issued</message>
-    <message key="xmlui.ArtifactBrowser.SimpleSearch.filter.orcidid">Orcid ID</message>
+    <message key="xmlui.ArtifactBrowser.SimpleSearch.filter.orcidid">ORCID iD</message>
 
 
     <message key="xmlui.dri2xhtml.structural.pagination-info.nototal">Now showing items {0}-{1}</message>

@@ -114,6 +114,10 @@ public class RestIndex {
                   		"<li>DELETE /bitstreams/{bitstream id} - Delete the specified bitstream from DSpace.</li>" +
                   		"<li>DELETE /bitstreams/{bitstream id}/policy/{policy_id} - Delete the specified bitstream policy.</li>" +
                   	"</ul>" +
+                    "<h2>Authorities</h2>" +
+                    "<ul>" +
+                        "<li>PUT /authorities/{authority key}/value - Update the name on an authority. /li>" +
+                    "</ul>" +
                 "</body></html> ";
     }
     
