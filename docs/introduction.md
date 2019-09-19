@@ -6,7 +6,7 @@
 
 DSpace as a software can be integrated with the ORCID database. When such an ORCID integration has been set up, the authority key field is leveraged to link the author to his ORCID ID. This patch extends the features that become available in DSpace once an integration with the ORCID database has been done. 
 
-The DSpace expanded-ORCID-support patch has been funded and contributed to the DSpace community by [King Abdullah University of Science and Technology (KAUST)](https://www.kaust.edu.sa/en). It was designed for use in conjunction with the Institutional ORCID Integration application released by the KAUST Library. 
+The DSpace expanded-ORCID-support patch has been funded and contributed to the DSpace community by [King Abdullah University of Science and Technology (KAUST)](https://www.kaust.edu.sa/en). It was designed for use in conjunction with the [Institutional ORCID Integration application](https://github.com/kaust-library/ioi) released by the KAUST Library. 
 
 The patch has been developed and is maintained by [Atmire](https://www.atmire.com), a registered service provider for DSpace.
 
