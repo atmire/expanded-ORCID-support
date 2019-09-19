@@ -142,6 +142,11 @@ public class RestIndex {
                         "<li>GET /filtered-collections/{collection_id} - Return items and item counts for a collection based on pre-defined filters</li>" +
                         "<li>GET /filtered-items - Retrieve a set of items based on a metadata query and a set of filters</li>" +
                     "</ul>" +
+                    "<h2>Authorities</h2>" +
+                    "<ul>" +
+                        "<li>PUT /authorities/{authority key}/value - Update the name on an authority. </li>" +
+                    "</ul>" +
+
                 "</body></html> ";
     }
 
