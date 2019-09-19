@@ -116,7 +116,7 @@ public class RestIndex {
                   	"</ul>" +
                     "<h2>Authorities</h2>" +
                     "<ul>" +
-                        "<li>PUT /authorities/{authority key}/value - Update the name on an authority. /li>" +
+                        "<li>PUT /authorities/{authority key}/value - Update the name on an authority. </li>" +
                     "</ul>" +
                 "</body></html> ";
     }
