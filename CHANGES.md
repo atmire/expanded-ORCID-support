@@ -1,13 +1,7 @@
 # CHANGES
 
-The releases are tagged with the date of the release. Currently, there are no version numbers.
+This document gives an overview of the different versions and the changes between versions. The releases are tagged with the date of the release. Currently, there are no version numbers.
 
-## Unreleased
+## September 25th, 2019
 
-Unreleased changes can be found on the stable_4x, stable_5x and stable_6x branches
-
-- Breaking change: ...
-- Fix: ...
-- improvement: ...
-- Validation: ...
-- Testing improvements: ...
+- First release of the expanded-ORCID-support patch (changes can be found on the stable_5x and stable_6x branches)
