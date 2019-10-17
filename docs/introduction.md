@@ -12,7 +12,7 @@ The patch has been developed and is maintained by [Atmire](https://www.atmire.co
 
 ## Postcardware
 
-You're free to use this patch (see DSpace source code [license](LICENSE)), but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our patches you are using.
+You're free to use this patch (see DSpace source code [license](https://github.com/atmire/expanded-ORCID-support/blob/master/LICENSE)), but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our patches you are using.
 
 Our addresses are (pick one):
 
