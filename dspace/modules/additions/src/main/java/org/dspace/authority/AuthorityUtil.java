@@ -7,6 +7,7 @@ import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.content.Item;
 import org.dspace.content.ItemIterator;
 import org.dspace.content.Metadatum;
+import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.MetadataAuthorityManager;
@@ -138,31 +139,24 @@ public class AuthorityUtil {
         if ( mam.isAuthorityControlled(fieldKey)) {
             if (isPersonAuthority(fieldKey)) {
 
-                Choices c = ChoiceAuthorityManager.getManager().getBestMatch(fieldKey, metadatum.value, -1, null);
-                if (c.values.length > 0) {
+                Choices c = ChoiceAuthorityManager.getManager().getMatches(fieldKey, metadatum.value, -1, 0, 0, null);
+                for (Choice choice : c.values) {
                     AuthorityValue matchedAuthority = new AuthorityValueFinder().findByUID(context, c.values[0].authority);
-                    if (matchedAuthority instanceof Orcidv2AuthorityValue) {
-
+                    if (!(matchedAuthority instanceof Orcidv2AuthorityValue)) {
                         item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier,
                                 metadatum.language,
-                                metadatum.value, matchedAuthority.getId(), Choices.CF_ACCEPTED);
-
+                                metadatum.value, choice.authority, c.confidence);
                         fieldAdded = true;
-
-                    } else {
-                        item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier,
-                                metadatum.language,
-                                metadatum.value, c.values[0].authority, c.confidence);
-                        fieldAdded = true;
+                        break;
                     }
                 }
             }
         }
 
         // make sure the field is always added to the metadata
-        if(!fieldAdded){
+        if(!fieldAdded) {
             item.addMetadata(metadatum.schema, metadatum.element, metadatum.qualifier, metadatum.language,
-                    metadatum.value);
+                    new String[]{metadatum.value}, null, null);
         }
     }
 
