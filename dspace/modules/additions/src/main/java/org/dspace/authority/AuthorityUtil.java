@@ -8,6 +8,7 @@ import org.dspace.authority.orcid.Orcidv2AuthorityValue;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
+import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.factory.ContentAuthorityServiceFactory;
 import org.dspace.content.authority.service.MetadataAuthorityService;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
+import static java.util.Collections.singletonList;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.log4j.Logger.getLogger;
 import static org.dspace.content.authority.Choices.CF_ACCEPTED;
@@ -132,21 +134,16 @@ public class AuthorityUtil {
             if (isPersonAuthority(metadataField)) {
 
                 Choices c = ContentAuthorityServiceFactory.getInstance().getChoiceAuthorityService()
-                        .getBestMatch(fieldKey, value, null, null);
-                if (c.values.length > 0) {
-                    AuthorityValue matchedAuthority = authorityValueService.findByUID(context, c.values[0].authority);
-                    if (matchedAuthority instanceof Orcidv2AuthorityValue) {
+                        .getMatches(fieldKey, value, null, 0, 0, null);
 
-                        itemService.addMetadata(context, item, metadataField, language, value,
-                                matchedAuthority.getId(), Choices.CF_ACCEPTED);
-
-                        fieldAdded = true;
-
-                    } else {
+                for (Choice choice : c.values) {
+                    AuthorityValue matchedAuthority = authorityValueService.findByUID(context, choice.authority);
+                    if (!(matchedAuthority instanceof Orcidv2AuthorityValue)) {
                         itemService.addMetadata(context, item, metadataField, language, value,
                                 c.values[0].authority, c.confidence);
 
                         fieldAdded = true;
+                        break;
                     }
                 }
             }
@@ -154,7 +151,7 @@ public class AuthorityUtil {
 
         // make sure the field is always added to the metadata
         if (!fieldAdded){
-            itemService.addMetadata(context, item, metadataField, language, value);
+            itemService.addMetadata(context, item, metadataField, language, singletonList(value), null, null);
         }
     }
 
