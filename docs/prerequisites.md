@@ -33,8 +33,17 @@ Atmire's modifications to a standard DSpace for the expanded-ORCID-support are t
 
 | DSpace | Patch                                                                       |
 | ------ | --------------------------------------------------------------------------- |
-| 5.x    | [Download](https://github.com/atmire/expanded-ORCID-support/compare/dspace_5x…stable_5x.diff) |
-| 6.x    | [Download](https://github.com/atmire/expanded-ORCID-support/compare/dspace_6x…stable_6x.diff) |
+| 5.x    | [Download](https://github.com/atmire/expanded-ORCID-support/blob/master/patches/dspace_5x.patch) |
+| 6.x    | [Download](https://github.com/atmire/expanded-ORCID-support/blob/master/patches/dspace_6x.patch) |
+
 
 
 Save this file under a meaningful name. It will later be referred to as `<patch>`.
+
+For those who are so inclined, you can also create the patch yourself based on the difference between the stable_5x and dspace_5x which is the branch with the orcid related code, and the unaltered Dspace branches.
+An example of the commands to use, for the DSpace5 version (Similar for DSpace6):
+* Checkout the stable_5x branch.
+* Create the path file similar to the following: 
+    * git diff --full-index dspace_5x >> dspace_5x.patch 
+    * When creating the patch, please be advised that the binaries need to be included as well, so that the images etc are also exported correctly.
+* The patch should now be basically the same one as the one present on the 'patches' branch
