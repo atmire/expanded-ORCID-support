@@ -33,10 +33,10 @@ Atmire's modifications to a standard DSpace for the expanded-ORCID-support are t
 
 | DSpace | Patch                                                                       |
 | ------ | --------------------------------------------------------------------------- |
-| 5.x    | [Download](https://github.com/atmire/expanded-ORCID-support/blob/master/patches/dspace_5x.patch) |
-| 6.x    | [Download](https://github.com/atmire/expanded-ORCID-support/blob/master/patches/dspace_6x.patch) |
+| 5.x    | [Download](https://github.com/atmire/expanded-ORCID-support/blob/master/patches/dspace_5x.patch) (Right-click: Save link as...)|
+| 6.x    | [Download](https://github.com/atmire/expanded-ORCID-support/blob/master/patches/dspace_6x.patch) (Right-click: Save link as...)|
 
-
+Please note the comment between parentheses. If you go straight to the patch file, and download it there, it will fall back to a regular text format (Which would not include the binaries). If you save the link through the right-click method, it will download it as a .patch format, so all relevant binaries are present as well)
 
 Save this file under a meaningful name. It will later be referred to as `<patch>`.
 
