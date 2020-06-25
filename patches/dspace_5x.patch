@@ -4426,7 +4426,31 @@ index 0000000000000000000000000000000000000000..e006121667e2c1890911c77ad7f7171c
 diff --git a/dspace/modules/xmlui-mirage2/src/main/webapp/themes/Mirage2/images/orcid_icon.png b/dspace/modules/xmlui-mirage2/src/main/webapp/themes/Mirage2/images/orcid_icon.png
 new file mode 100644
 index 0000000000000000000000000000000000000000..ef109145bc74c3f884d712ae2782ccedd29d096d
-Binary files /dev/null and b/dspace/modules/xmlui-mirage2/src/main/webapp/themes/Mirage2/images/orcid_icon.png differ
+GIT binary patch
+literal 1261
+zcmbVMTWs4@7<LKtvaPIxQ4tX0;39;yB|f&}*f9x9V#hRN>8dnhK|*4#ebRWX?aX!;
+zw;<GRg8@QQ1ur0ws02u`ham<+NC;MTsVGBz7#d<oyj7hTNU#<O#%&z8N#UW|1D5P_
+z{&W8C`|p0Pzwe>W4R>rH2%<CJD;M$F6};`O_<Q&AH5D&mFIV;k?21=c9Ykbwdk}%V
+zsScqcQuVR@b0|p=p^8x|d*#9|QM1jc8t6oQvxd<Gk=)_eRBae}U=R%%R*L-T<C7#X
+z^c1;=E5JfcLRF)8+(855eI;#tSWD>Sjt4=~7cqf}JQeunh~<iYid^9p@jf`FNU);f
+z4X4Oer^<zXAlVKATogt$7>6KEM`<?3^Za(eKpIkzp=c&T^CHWL5Q4@-Vr!0G5sR|Y
+zu!W@*S@pb{NKy5AJz8g@wlhT0i9{mcV3-Kjh`3{xr}`1g?P)T|$kiO9<{7pH0!DSv
+z9`#Zr_H;D_vsNgq5nFB}Q8;Ckuhu9!3MtbJ;#$#my(0S8jdiu%(pU{qMdaF}j)v<|
+z>1l#-?yherP{iJdyBz};MIDiCZPY}TmzPr{zKQCFE^@piGf;pG$H2Hi<M3lrg5_vd
+ziOU&*<C`4oVOds^gsc)%6pp9q94+t}A(s_|xWZ>8877+8yybeTrJ<%>1KVw2+3R9O
+z$w8`TJ0;s5X?8$=)%I++YS(}?z=49Q8CD<%<ynnZMvid+>55~UU?snzv5tL3;uV_a
+zV~}se%_%vVPta1F&cT>0lMSr?e{x1)XQ-e#{?jbYBiw<(cCGcXur@r%!V}}*(O5oI
+z{e&P|?#j!VlK<_Xo(`RxfAl`$9UmM>za$c8Hooz~Q7YZ7%je%F-uycBUQ6hyTFbMc
+z$<`FH|K+LJ>utu-SaNoH+bduGy!chyW33b0h0Pa2G_mh}B6KB996K_(<?^MgFs#3t
+z`>m^Tf?kGy{{F{J-%ZQi)rrqC$N%D<*+wlgKc2jJj##>x@t3Z2ot`@q`MmWkt9F=M
+z;nnHx(@V>bY<j}J1lyfs%<Xeq!NU*0EkAs}=ka;^HUFD0rte>Pnw*!jGn1W}wtK^1
+zRy%xQB6Mcohg0uXKDuVzx%2XkXHR9HZ0UIZwuQ3rtA4|YU$RPdXL7fE%WUuYnT3(|
+zjfc|U@ASdN&HbsV^x?`Tsj8@eWW%SJTYKKR7zQ)MJumM4)bIFUSMUSM=lbO1*}Vt<
+E0ecprk^lez
+
+literal 0
+HcmV?d00001
+
 diff --git a/dspace/modules/xmlui-mirage2/src/main/webapp/themes/Mirage2/styles/_style.scss b/dspace/modules/xmlui-mirage2/src/main/webapp/themes/Mirage2/styles/_style.scss
 index 91425db26c6dc5e147820b94f8878ee2019c8283..be14b536fc14b847c30e70f9b0f30106050aac85 100644
 --- a/dspace/modules/xmlui-mirage2/src/main/webapp/themes/Mirage2/styles/_style.scss
@@ -6980,7 +7004,31 @@ index 0000000000000000000000000000000000000000..4fb4b101216f098332c79042125bb2ae
 diff --git a/dspace/modules/xmlui/src/main/webapp/themes/Mirage/images/orcid_icon.png b/dspace/modules/xmlui/src/main/webapp/themes/Mirage/images/orcid_icon.png
 new file mode 100644
 index 0000000000000000000000000000000000000000..ef109145bc74c3f884d712ae2782ccedd29d096d
-Binary files /dev/null and b/dspace/modules/xmlui/src/main/webapp/themes/Mirage/images/orcid_icon.png differ
+GIT binary patch
+literal 1261
+zcmbVMTWs4@7<LKtvaPIxQ4tX0;39;yB|f&}*f9x9V#hRN>8dnhK|*4#ebRWX?aX!;
+zw;<GRg8@QQ1ur0ws02u`ham<+NC;MTsVGBz7#d<oyj7hTNU#<O#%&z8N#UW|1D5P_
+z{&W8C`|p0Pzwe>W4R>rH2%<CJD;M$F6};`O_<Q&AH5D&mFIV;k?21=c9Ykbwdk}%V
+zsScqcQuVR@b0|p=p^8x|d*#9|QM1jc8t6oQvxd<Gk=)_eRBae}U=R%%R*L-T<C7#X
+z^c1;=E5JfcLRF)8+(855eI;#tSWD>Sjt4=~7cqf}JQeunh~<iYid^9p@jf`FNU);f
+z4X4Oer^<zXAlVKATogt$7>6KEM`<?3^Za(eKpIkzp=c&T^CHWL5Q4@-Vr!0G5sR|Y
+zu!W@*S@pb{NKy5AJz8g@wlhT0i9{mcV3-Kjh`3{xr}`1g?P)T|$kiO9<{7pH0!DSv
+z9`#Zr_H;D_vsNgq5nFB}Q8;Ckuhu9!3MtbJ;#$#my(0S8jdiu%(pU{qMdaF}j)v<|
+z>1l#-?yherP{iJdyBz};MIDiCZPY}TmzPr{zKQCFE^@piGf;pG$H2Hi<M3lrg5_vd
+ziOU&*<C`4oVOds^gsc)%6pp9q94+t}A(s_|xWZ>8877+8yybeTrJ<%>1KVw2+3R9O
+z$w8`TJ0;s5X?8$=)%I++YS(}?z=49Q8CD<%<ynnZMvid+>55~UU?snzv5tL3;uV_a
+zV~}se%_%vVPta1F&cT>0lMSr?e{x1)XQ-e#{?jbYBiw<(cCGcXur@r%!V}}*(O5oI
+z{e&P|?#j!VlK<_Xo(`RxfAl`$9UmM>za$c8Hooz~Q7YZ7%je%F-uycBUQ6hyTFbMc
+z$<`FH|K+LJ>utu-SaNoH+bduGy!chyW33b0h0Pa2G_mh}B6KB996K_(<?^MgFs#3t
+z`>m^Tf?kGy{{F{J-%ZQi)rrqC$N%D<*+wlgKc2jJj##>x@t3Z2ot`@q`MmWkt9F=M
+z;nnHx(@V>bY<j}J1lyfs%<Xeq!NU*0EkAs}=ka;^HUFD0rte>Pnw*!jGn1W}wtK^1
+zRy%xQB6Mcohg0uXKDuVzx%2XkXHR9HZ0UIZwuQ3rtA4|YU$RPdXL7fE%WUuYnT3(|
+zjfc|U@ASdN&HbsV^x?`Tsj8@eWW%SJTYKKR7zQ)MJumM4)bIFUSMUSM=lbO1*}Vt<
+E0ecprk^lez
+
+literal 0
+HcmV?d00001
+
 diff --git a/dspace/modules/xmlui/src/main/webapp/themes/Mirage/lib/css/style.css b/dspace/modules/xmlui/src/main/webapp/themes/Mirage/lib/css/style.css
 new file mode 100644
 index 0000000000000000000000000000000000000000..3540e5fa2c0a91fd8198628adcfac2ccf35ed37c

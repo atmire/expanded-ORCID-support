@@ -44,6 +44,6 @@ For those who are so inclined, you can also create the patch yourself based on t
 An example of the commands to use, for the DSpace5 version (Similar for DSpace6):
 * Checkout the stable_5x branch.
 * Create the path file similar to the following: 
-    * git diff --full-index dspace_5x >> dspace_5x.patch 
+    * git diff --full-index --binary dspace_5x >> dspace_5x.patch 
     * When creating the patch, please be advised that the binaries need to be included as well, so that the images etc are also exported correctly.
 * The patch should now be basically the same one as the one present on the 'patches' branch
